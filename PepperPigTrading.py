@@ -10,7 +10,7 @@ def loadPrices(fn):
     global nt, nInst
     df=pd.read_csv(fn, sep='\s+', header=None, index_col=None)
     nt, nInst = df.values.shape
-    return (df.values).T
+    return (df.values)
 nInst=100
 currentPos = np.zeros(nInst)
 pricesFile="./prices250.txt"
@@ -24,7 +24,7 @@ def Strategy(prices):
     for pair in pairs:
         #stock 74 8.96
         #stock 79 = 6,83
-        if ((prices[pair[0]] - prices[pair[1]]).mean()) > 0:
+        if (prices[0:150, pair[0]] - prices[0:150, pair[1]]).mean() > 0:
             #pair[0] is > pair[1]
             stock_expensive = pair[0]
             stock_cheaper = pair[1]
@@ -33,22 +33,23 @@ def Strategy(prices):
             stock_expensive = pair[1]
             stock_cheaper = pair[0]
 
-        data_spread = prices[stock_expensive] - prices[stock_cheaper]
+        data_spread = prices[0:150, stock_expensive] - prices[0:150, stock_cheaper]
         mean_spread = data_spread.mean()
         
         one_std = data_spread.std()
 
-        curPrices = prices[:,-1]
-        #print(curPrices)
+        curPrices = prices[150, :]
         last_price_spread = curPrices[stock_expensive] - curPrices[stock_cheaper]
-        #print(last_price_spread) # printing the last prices i.e. day 250 
+        #standardize by subtracting the mean
+        last_price_spread = last_price_spread - mean_spread
+        # printing the last prices i.e. day 150
         if last_price_spread >= one_std:
             #short the spread
             return 1
         
         elif last_price_spread <= -one_std:
             #long the spread
-            return -1
+            return "Long Now"
         
         else:
             #do nothing
@@ -76,10 +77,9 @@ def Strategy(prices):
         #[(5, 50), (10, -20)] = strategy(curPrices, pair)
         #pair is a tuple 
         rpos = np.array([int(x) for x in 1000 * np.random.randn(nins)])
-        currentPos += rpos
-    '''
+        currentPos += rposs
     #returns [new positions]
-
+    '''
 
 
 
@@ -99,29 +99,17 @@ def getMyPosition (prcSoFar):
 
 
 
-prcHistSoFar = prcAll[:,151:250]
+
 #all stocks from day 151 to day 250
-x = prcAll[0, :]
+#x = prcAll[0, :]
+#z = prcAll[:, 0] #[stock1, stock2, stock3, stock4] Day 1
+#so 149 gives the 150th day, so 250 doesnt include 250, so this goes from day 150 to day 251 but doesnt include 251
+#it goes up to 250
+#y = prcAll[:, 150:250]
 
 
 # so we have to return our positions based on at the end of the last most pricing day. so eval.py
 # gets all the positions at the end of day1, at the end of day2, end of day3 etc... and it will keep calling getmyposition in a loop 
+prcHistSoFar = prcAll[0:151, :]
 newPosOrig = getMyPosition(prcHistSoFar)
-#print(newPosOrig)
-#print(prcHistSoFar)
-print(x)
-
-
-
-    
-#prcall[col, row]
-#prcall[0, :]
-#gives [18.25
-#       18.22
-#       18.25 
-#       ...]
-#all prices for stock 0 for 250 days
-'''
-[ stock1, stock 1, stock,..]
-[stock 2, stock 2, stpcl2.//]
-'''
+print(newPosOrig)
