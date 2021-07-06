@@ -1,8 +1,7 @@
-#!/usr/bin/envblah python
 
 import numpy as np
 import pandas as pd
-from teamName import getMyPosition as getPosition
+from PepperPigTrading import getMyPosition as getPosition
 
 # Algorithm testing file. 
 # Quantitative judging will be determined from output of this program.
@@ -39,11 +38,17 @@ def calcPL(prcHist):
     todayPLL = []
     (_,nt) = prcHist.shape
     for t in range(201,251):
+        #is an array of stock price all up to day t (so first example its up to 201)
         prcHistSoFar = prcHist[:,:t]
+        
         newPosOrig = getPosition(prcHistSoFar)
+        #our array of stock positions at the end of day 201
+
+
         curPrices = prcHistSoFar[:,-1] 
         posLimits = np.array([int(x) for x in dlrPosLimit / curPrices])
         newPos = np.array([int(p) for p in np.clip(newPosOrig, -posLimits, posLimits)])
+
         deltaPos = newPos - curPos
         dvolumes = curPrices * np.abs(deltaPos)
         dvolume0 = np.sum(dvolumes[:50])
