@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import numpy as np
 import pandas as pd
 import sys
@@ -69,22 +70,6 @@ def Strategy(prices):
         z_score  = (last_price_spread - mean_spread)/one_std
 
         # Volume of Shares
-       
-        #Dollar_volume = -3.369272 + 2311.321*abs(z_score) - 2156.334*(abs(z_score)**2)+ 1132.075*(abs(z_score)**3)
-
-        #Dollar_volume = -4 + 2300*abs(z_score) - 2100*(abs(z_score)**2)+ 1100*(abs(z_score)**3)
-
-        #Dollar_volume = 1500 + 7500 * (np.log(abs(z_score)))
-
-        #Dollar_volume = 1000 + 1000*(np.exp(abs(z_score))) (BEST ONE SO FAR - 6.11 Sharp, 2.042% return)
-
-        #Dollar_volume = 750 + 1000*(np.exp(abs(z_score))) (6.06 Sharp, 2.054% return)
-
-        #Dollar_volume = 500 + 1000*(np.exp(abs(z_score))) (6.00 sharp, 2.065% return)
-
-        #Dollar_volume = 1000 + 1100*(np.exp(abs(z_score))) (6.12 sharp, 2.029% return)
-
-        #Dollar_volume = 1000 + 900*(np.exp(abs(z_score))) (6.05 Sharp, 2.042% return)
 
         Dollar_volume = 1000 + 1000*(np.exp(abs(z_score)))
 
